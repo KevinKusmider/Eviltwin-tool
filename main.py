@@ -4,7 +4,7 @@ from functions import *
 from csv import reader
 import numpy
 from simple_term_menu import TerminalMenu
-sys.path.append('/home/kali/Desktop/ScriptTP/functions')
+sys.path.append('/home/kali/Desktop/ScriptTP/src/functions')
 
 IF_AP = "wlan1"
 ssid = "ssid TEST"
