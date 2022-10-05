@@ -1,0 +1,4 @@
+interface=wlan1
+ssid=ssid TEST
+hw_mode=g
+channel=3
