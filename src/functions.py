@@ -1,20 +1,19 @@
 import os
 import sys
-
-sys.path.append('/home/kali/Desktop/Eviltwin-tool/src/')
-import settings
 from simple_term_menu import TerminalMenu
+
+with open("../conf/local.json") as json_data_file:
+	data = json.load(json_data_file)
+
+sys.path.append(data["pathSRC"])
+import settings
 
 def shell(command):
 	stream = os.popen(command)
 	return stream.read()
 
-def cls():
-    os.system('cls' if os.name=='nt' else 'clear')
-
 def displayMenu():
-	cls()
-	shell("clear")
+	shell('clear')
 	print(shell("figlet EVILTWIN"))
 	print("Interface AP :", settings.globals["interfaceAP"])
 	print("Interface Internet :", settings.globals["interfaceInternet"])
@@ -57,8 +56,7 @@ def displayInterfaceNames(interface):
 	del options[-1]
 	terminal_menu = TerminalMenu(options)
 	menu_entry_index = terminal_menu.show()
-	print(options[menu_entry_index])
-	settings.globals[interface] = options[menu_entry_index]
+	settings.globals["interfaceAP"] = options[menu_entry_index]
 
 def print_array(array):
 	for row in array:
@@ -66,7 +64,7 @@ def print_array(array):
 
 def airoScan(wlan):
 	#shell("rm res/*")
-	shell("airodump-ng " + wlan + " -w res/try & sleep 10; pkill airodump")
+	shell("airodump-ng " + wlan + " -w res/captures & sleep 10; pkill airodump")
 
 def firewallRouting(wlan):
 	shell("echo 1 > /proc/sys/net/ipv4/ip_forward") #MODE FORWARD
