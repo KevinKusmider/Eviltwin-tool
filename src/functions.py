@@ -18,7 +18,8 @@ def displayMenu():
 	print(shell("figlet EVILTWIN"))
 	print("Interface AP :", settings.globals["interfaceAP"])
 	print("Interface Internet :", settings.globals["interfaceInternet"])
-	print("Interface DeAuth :", settings.globals["interfaceDeauth"], "\n")
+	print("Interface DeAuth :", settings.globals["interfaceDeauth"])
+	print("Selected WIFI :", settings.globals["targetWifi"], "\n")
 
 	options = ["Select Interfaces", "Select WIFI target to clone", "Launch Deauth", "Exit"]
 	terminal_menu = TerminalMenu(options)
