@@ -32,7 +32,6 @@ def displayInterfaceMenu():
 	del options[-1]
 	terminal_menu = TerminalMenu(options)
 	menu_entry_index = terminal_menu.show()
-	print(options[menu_entry_index])
 	settings.globals["interfaceAP"] = options[menu_entry_index]
 
 def print_array(array):
@@ -41,7 +40,7 @@ def print_array(array):
 
 def airoScan(wlan):
 	#shell("rm res/*")
-	shell("airodump-ng " + wlan + " -w res/try & sleep 10; pkill airodump")
+	shell("airodump-ng " + wlan + " -w res/captures & sleep 10; pkill airodump")
 
 def firewallRouting(wlan):
 	shell("echo 1 > /proc/sys/net/ipv4/ip_forward") #MODE FORWARD
