@@ -1,8 +1,9 @@
 import os
 import sys
+import json
 from simple_term_menu import TerminalMenu
 
-with open("../conf/local.json") as json_data_file:
+with open("conf/local.json") as json_data_file:
 	data = json.load(json_data_file)
 
 sys.path.append(data["pathSRC"])
