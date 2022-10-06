@@ -13,11 +13,6 @@ sys.path.append(data["pathSRC"])
 import settings
 from functions import *
 
-ssid = "ssid TEST"
-interfaceAP = None
-interfaceInternet = None
-interfaceDeauth = None
-
 
 def main():
 	loop = True

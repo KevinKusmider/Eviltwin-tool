@@ -13,7 +13,11 @@ def shell(command):
 	stream = os.popen(command)
 	return stream.read()
 
+def cls():
+	os.system('cls' if os.name=='nt' else 'clear')
+
 def displayMenu():
+	cls()
 	shell('clear')
 	print(shell("figlet EVILTWIN"))
 	print("Interface AP :", settings.globals["interfaceAP"])
@@ -57,7 +61,7 @@ def displayInterfaceNames(interface):
 	del options[-1]
 	terminal_menu = TerminalMenu(options)
 	menu_entry_index = terminal_menu.show()
-	settings.globals["interfaceAP"] = options[menu_entry_index]
+	settings.globals[interface] = options[menu_entry_index]
 
 def print_array(array):
 	for row in array:
