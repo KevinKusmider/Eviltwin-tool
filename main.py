@@ -1,22 +1,25 @@
 import os
 import sys
+
+sys.path.append('/home/kusmider/scriptMerge/src/')
+
+import settings
 from functions import *
 from csv import reader
-import numpy
 from simple_term_menu import TerminalMenu
-sys.path.append('/home/kali/Desktop/ScriptTP/src/functions')
+from tabulate import tabulate
 
-IF_AP = "wlan1"
 ssid = "ssid TEST"
 interfaceAP = None
 interfaceInternet = None
 interfaceDeauth = None
 
-#shell("rm res/*")
 
 def main():
-	while True:
-		displayMenu(interfaceAP, interfaceInternet, interfaceDeauth)
+	loop = True
+	settings.init()
+	while loop:
+		loop = displayMenu()
 
 if __name__ == "__main__":
     main()

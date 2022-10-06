@@ -1,48 +1,46 @@
 import os
+import sys
+
+sys.path.append('/home/kusmider/scriptMerge/src/')
+import settings
 from simple_term_menu import TerminalMenu
 
 def shell(command):
 	stream = os.popen(command)
 	return stream.read()
 
-def displayMenu(interfaceAP, interfaceInternet, interfaceDeauth):
+def displayMenu():
 	shell('clear')
 	print(shell("figlet EVILTWIN"))
-	print("Interface AP :", interfaceAP)
-	print("Interface Internet :", interfaceInternet)
-	print("Interface DeAuth :", interfaceDeauth, "\n")
+	print("Interface AP :", settings.globals["interfaceAP"])
+	print("Interface Internet :", settings.globals["interfaceInternet"])
+	print("Interface DeAuth :", settings.globals["interfaceDeauth"], "\n")
 
-	options = ["Select Interface AP", "Select Interface Internet", "Select Interface Deauth"]
+	options = ["Select Interface AP", "Select Interface Internet", "Select Interface Deauth", "Exit"]
 	terminal_menu = TerminalMenu(options)
 	menu_entry_index = terminal_menu.show()
 
 	match menu_entry_index:
 		case 0:
 			displayInterfaceMenu()
+		case 3:
+			return False
+	return True
+
 def displayInterfaceMenu():
 	options = shell("ip -o link show | awk -F': ' '{print $2}'").split("\n")
 	del options[-1]
 	terminal_menu = TerminalMenu(options)
 	menu_entry_index = terminal_menu.show()
+	print(options[menu_entry_index])
+	settings.globals["interfaceAP"] = options[menu_entry_index]
 
 def print_array(array):
 	for row in array:
 		print(row)
 
-def print_array_column(array, x):
-        for row in array:
-                print(row[x])
-
-def sort_array_by_x_column(array, x):
-	for i in range(len(array)):
-		for j in range(len(array)):
-			if array[j] > array[i]and i != j:
-				temp = array[j]
-				array[j] = array[i]
-				array[i] = temp
-	return array
-
 def airoScan(wlan):
+	#shell("rm res/*")
 	shell("airodump-ng " + wlan + " -w res/try & sleep 10; pkill airodump")
 
 def firewallRouting(wlan):
@@ -74,3 +72,25 @@ def deAuth(wlan, bssid, MacDevice):
 def airoScanTarget(wlan, bssid, channel):
 	shell('airodump-ng -d ' + bssid + ' -c' + channel + ' ' + wlan)
 
+def get_aps():
+    accessPoints = {"header" : [], "aps" : []}
+    with open("res/captures-01.csv", "r") as file:
+        reader = csv.reader(file)
+        for row in reader:
+            accessPoints["aps"].append(row)
+
+    # Set header, and remove it from aps array
+    accessPoints["aps"].pop(0)
+    accessPoints["header"] = accessPoints["aps"][0]
+    accessPoints["aps"].pop(0)
+
+    # Remove second part of aps infos
+    index = None
+    for i, ap in enumerate(accessPoints["aps"]):
+        if not ap:
+            index = i
+            break
+
+    del accessPoints["aps"][index:]
+
+    return accessPoints
