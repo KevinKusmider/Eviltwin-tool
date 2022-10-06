@@ -1,7 +1,9 @@
 import os
 import sys
 import json
+import csv
 from simple_term_menu import TerminalMenu
+from tabulate import tabulate
 
 with open("conf/local.json") as json_data_file:
 	data = json.load(json_data_file)
@@ -23,7 +25,9 @@ def displayMenu():
 	print("Interface AP :", settings.globals["interfaceAP"])
 	print("Interface Internet :", settings.globals["interfaceInternet"])
 	print("Interface DeAuth :", settings.globals["interfaceDeauth"])
-	print("Selected WIFI :", settings.globals["targetWifi"], "\n")
+	print("Selected WIFI :", settings.globals["targetWifi"])
+	print("bssid :", settings.globals["bssid"])
+	print("channel :", settings.globals["channel"], "\n")
 
 	options = ["Select Interfaces", "Select WIFI target to clone", "Launch Deauth", "Exit"]
 	terminal_menu = TerminalMenu(options)
@@ -33,7 +37,7 @@ def displayMenu():
 		case 0:
 			displayInterfaceMenu()
 		case 1:
-			displayInterfaceMenu()
+			displaySelectTarget()
 		case 2:
 			displayInterfaceMenu()
 		case 3:
@@ -122,3 +126,17 @@ def get_aps():
     del accessPoints["aps"][index:]
 
     return accessPoints
+
+def displaySelectTarget():
+	#airoScan(settings.global["interfaceAP"])
+	aps = get_aps();
+	options = tabulate(aps["aps"], headers=aps["header"])
+	headers = options.split("\n")[0:2]
+	headers = "\n".join(headers)
+	items = options.split("\n")[2:]
+	terminal_menu = TerminalMenu(menu_entries = items, title = headers)
+	menu_entry_index = terminal_menu.show()
+	selectedTarget = aps["aps"][menu_entry_index]
+	settings.globals["targetWifi"] = selectedTarget[13].lstrip()
+	settings.globals["bssid"] = selectedTarget[0].lstrip()
+	settings.globals["channel"] = selectedTarget[3].lstrip()
