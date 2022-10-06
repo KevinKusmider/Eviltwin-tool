@@ -17,20 +17,41 @@ def displayMenu():
 	print(shell("figlet EVILTWIN"))
 	print("Interface AP :", settings.globals["interfaceAP"])
 	print("Interface Internet :", settings.globals["interfaceInternet"])
-	print("Interface DeAuth :", settings.globals["interfaceDeauth"], "\n")
+	print("Interface DeAuth :", settings.globals["interfaceDeauth"])
+	print("Selected WIFI :", settings.globals["targetWifi"], "\n")
 
-	options = ["Select Interface AP", "Select Interface Internet", "Select Interface Deauth", "Exit"]
+	options = ["Select Interfaces", "Select WIFI target to clone", "Launch Deauth", "Exit"]
 	terminal_menu = TerminalMenu(options)
 	menu_entry_index = terminal_menu.show()
 
 	match menu_entry_index:
 		case 0:
 			displayInterfaceMenu()
+		case 1:
+			displayInterfaceMenu()
+		case 2:
+			displayInterfaceMenu()
 		case 3:
 			return False
 	return True
 
 def displayInterfaceMenu():
+	options = ["Select Interface AP", "Select Interface Internet", "Select Interface Deauth", "Exit"]
+	terminal_menu = TerminalMenu(options)
+	menu_entry_index = terminal_menu.show()
+
+	match menu_entry_index:
+		case 0:
+			displayInterfaceNames('interfaceAP')
+		case 1:
+			displayInterfaceNames('interfaceInternet')
+		case 2:
+			displayInterfaceNames('interfaceDeauth')
+		case 3:
+			return False
+	return True
+
+def displayInterfaceNames(interface):
 	options = shell("ip -o link show | awk -F': ' '{print $2}'").split("\n")
 	del options[-1]
 	terminal_menu = TerminalMenu(options)
