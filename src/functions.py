@@ -20,22 +20,38 @@ def displayMenu():
 	print("Interface Internet :", settings.globals["interfaceInternet"])
 	print("Interface DeAuth :", settings.globals["interfaceDeauth"], "\n")
 
+	options = ["Select Interfaces", "Select WIFI target to clone", "Launch Deauth", "Exit"]
+	terminal_menu = TerminalMenu(options)
+	menu_entry_index = terminal_menu.show()
+
+	match menu_entry_index:
+		case 0:
+			displayInterfaceMenu()
+		case 1:
+			displayInterfaceMenu()
+		case 2:
+			displayInterfaceMenu()
+		case 3:
+			return False
+	return True
+
+def displayInterfaceMenu():
 	options = ["Select Interface AP", "Select Interface Internet", "Select Interface Deauth", "Exit"]
 	terminal_menu = TerminalMenu(options)
 	menu_entry_index = terminal_menu.show()
 
 	match menu_entry_index:
 		case 0:
-			displayInterfaceMenu('interfaceAP')
+			displayInterfaceNames('interfaceAP')
 		case 1:
-			displayInterfaceMenu('interfaceInternet')
+			displayInterfaceNames('interfaceInternet')
 		case 2:
-			displayInterfaceMenu('interfaceDeauth')
+			displayInterfaceNames('interfaceDeauth')
 		case 3:
 			return False
 	return True
 
-def displayInterfaceMenu(interface):
+def displayInterfaceNames(interface):
 	options = shell("ip -o link show | awk -F': ' '{print $2}'").split("\n")
 	del options[-1]
 	terminal_menu = TerminalMenu(options)
