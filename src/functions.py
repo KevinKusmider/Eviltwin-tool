@@ -1,9 +1,12 @@
 import os
 import sys
-
-sys.path.append('/home/kusmider/scriptMerge/src/')
-import settings
 from simple_term_menu import TerminalMenu
+
+with open("../conf/local.json") as json_data_file:
+	data = json.load(json_data_file)
+
+sys.path.append(data["pathSRC"])
+import settings
 
 def shell(command):
 	stream = os.popen(command)
