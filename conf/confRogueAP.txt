@@ -1,4 +1,4 @@
-interface=wlan1
-ssid=ssid TEST
+interface=wlan0
+ssid=HUAWEI-LeaderAP-4300
 hw_mode=g
 channel=3
