@@ -1,7 +1,7 @@
 import os
 import sys
 
-sys.path.append('/home/kusmider/scriptMerge/src/')
+sys.path.append('/home/kali/Desktop/Eviltwin-tool/src/')
 import settings
 from simple_term_menu import TerminalMenu
 
@@ -9,8 +9,12 @@ def shell(command):
 	stream = os.popen(command)
 	return stream.read()
 
+def cls():
+    os.system('cls' if os.name=='nt' else 'clear')
+
 def displayMenu():
-	shell('clear')
+	cls()
+	shell("clear")
 	print(shell("figlet EVILTWIN"))
 	print("Interface AP :", settings.globals["interfaceAP"])
 	print("Interface Internet :", settings.globals["interfaceInternet"])

@@ -1,7 +1,7 @@
 import os
 import sys
 
-sys.path.append('/home/kusmider/scriptMerge/src/')
+sys.path.append('/home/kali/Desktop/Eviltwin-tool/src/')
 
 import settings
 from functions import *
