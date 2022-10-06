@@ -26,18 +26,22 @@ def displayMenu():
 
 	match menu_entry_index:
 		case 0:
-			displayInterfaceMenu()
+			displayInterfaceMenu('interfaceAP')
+		case 1:
+			displayInterfaceMenu('interfaceInternet')
+		case 2:
+			displayInterfaceMenu('interfaceDeauth')
 		case 3:
 			return False
 	return True
 
-def displayInterfaceMenu():
+def displayInterfaceMenu(interface):
 	options = shell("ip -o link show | awk -F': ' '{print $2}'").split("\n")
 	del options[-1]
 	terminal_menu = TerminalMenu(options)
 	menu_entry_index = terminal_menu.show()
 	print(options[menu_entry_index])
-	settings.globals["interfaceAP"] = options[menu_entry_index]
+	settings.globals[interface] = options[menu_entry_index]
 
 def print_array(array):
 	for row in array:
