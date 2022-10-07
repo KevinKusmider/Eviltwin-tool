@@ -1,4 +1,4 @@
 interface=wlan1
-ssid=Honor 8X
+ssid=ESGI
 hw_mode=g
 channel=3
