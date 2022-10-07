@@ -61,9 +61,5 @@ def displaySelectDevice():
 	items = options.split("\n")[2:]
 	terminal_menu = TerminalMenu(menu_entries = items, title = header)
 	menu_entry_index = terminal_menu.show()
-	#selectedTarget = aps["aps"][menu_entry_index]
-	#settings.globals["targetWifi"] = selectedTarget[13].lstrip()
-	#settings.globals["bssid"] = selectedTarget[0].lstrip()
-	#settings.globals["channel"] = selectedTarget[3].lstrip()
-	#hostapdInit(settings.globals["interfaceAP"], settings.globals["targetWifi"])
-
+	selectedTarget = devices["devices"][menu_entry_index]
+	settings.globals["deviceMAC"] = selectedTarget[0].lstrip()
