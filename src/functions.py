@@ -5,6 +5,7 @@ import csv
 from simple_term_menu import TerminalMenu
 from tabulate import tabulate
 from subprocess import call
+from termcolor import colored
 
 with open("conf/local.json") as json_data_file:
 	data = json.load(json_data_file)
@@ -24,13 +25,16 @@ def displayMenu():
 	cls()
 	shell('clear')
 	print(shell("figlet EVILTWIN"))
-	print("Interface AP :", settings.globals["interfaceAP"])
-	print("Interface Internet :", settings.globals["interfaceInternet"])
-	print("Interface DeAuth :", settings.globals["interfaceDeauth"])
-	print("Selected WIFI :", settings.globals["targetWifi"])
-	print("bssid :", settings.globals["bssid"])
-	print("channel :", settings.globals["channel"])
-	print("Capture Packets : ", settings.globals["capture"], "\n")
+	print("Interface AP :", colored(settings.globals["interfaceAP"], 'red'))
+	print("Interface Internet :", colored(settings.globals["interfaceInternet"], 'red'))
+	print("Interface DeAuth :", colored(settings.globals["interfaceDeauth"], 'red'))
+	print("Selected WIFI :", colored(settings.globals["targetWifi"], 'red'))
+	print("bssid :", colored(settings.globals["bssid"], 'red'))
+	print("channel :", colored(settings.globals["channel"], 'red'))
+	if settings.globals["capture"] == 'OFF':
+		print("Capture Packets : ", '\x1b[0;37;41m' + settings.globals["capture"] + '\x1b[0m', "\n")
+	else:
+		print("Capture Packets : ", '\x1b[6;30;42m' + settings.globals["capture"] + '\x1b[0m', "\n")	
 	options = ["Select Interfaces", "Select WIFI target to clone", "Lauch TwinEvil", "Deauthentification", "Start/Stop Packets capture", "Exit"]
 	terminal_menu = TerminalMenu(options)
 	menu_entry_index = terminal_menu.show()
@@ -160,10 +164,10 @@ def startTwin():
 	hostapdEnable()
 
 def capturePackets(wlan):
-	call(["gnome-terminal", "-x", "sh", "-c", "dnsmasq -d -C conf/confDnsmasq.txt; bash"])
-	shell("tcpdump -i " + wlan + " -s 65535 -w dataCaptured.pcap")
 	if settings.globals["capture"] == 'OFF':
-		settings.globals["capture"] == 'ON'
-	if 	settings.globals["capture"] == 'ON':
-		settings.globals["capture"] == 'OFF'
+		settings.globals["capture"] = 'ON'
+		call(["gnome-terminal", "-x", "sh", "-c", "tcpdump -i " + wlan + " -s 65535 -w dataCaptured.pcap; bash"])
+	else:
+		settings.globals["capture"] = 'OFF'
+		shell("pkill tcpdump")
 
