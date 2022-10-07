@@ -1,4 +1,4 @@
-interface=wlan0mon
-ssid=iPhone Y
+interface=wlan1
+ssid=Redmi Note 8 (2021) chimo
 hw_mode=g
 channel=3
