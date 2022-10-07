@@ -23,7 +23,7 @@ def print_array(array):
 def scanDevices(wlan):
 	print(shell("pwd"))
 	shell("rm -f res/targetDevices/*")
-	shell("airodump-ng -d " + settings.globals["bssid"] + " -c " + settings.globals["channel"] + " " + wlan + " -w res/targetDevices/captures & sleep 20; pkill airodump")
+	shell("airodump-ng -d " + settings.globals["bssid"] + " -c " + settings.globals["channel"] + " " + wlan + " -w res/targetDevices/captures & sleep 10; pkill airodump")
 
 def getDevices():
 	devices = {"header" : [], "devices" : []}
@@ -51,9 +51,9 @@ def getDevices():
 	return devices
 
 def displaySelectDevice():
-	#scanDevices(settings.globals["interfaceAP"])
+	scanDevices(settings.globals["interfaceAP"])
 	devices = getDevices()
-	if not devices:
+	if not devices["devices"]:
 		return
 	options = tabulate(devices["devices"], headers=devices["header"])
 	header = options.split("\n")[0:2] 
