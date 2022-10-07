@@ -1,4 +1,4 @@
-interface=wlan1
+interface=wlan0mon
 ssid=Redmi Note 8 (2021) chimo
 hw_mode=g
 channel=3

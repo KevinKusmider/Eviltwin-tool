@@ -42,7 +42,7 @@ def displayMenu():
 		case 0:
 			displayInterfaceMenu()
 		case 1:
-			displaySelectTarget()
+			displaySelectTargetType()
 		case 2:
 			startTwin()
 		case 3:
@@ -144,6 +144,31 @@ def getAps():
     del accessPoints["aps"][index:]
 
     return accessPoints
+
+def displaySelectTargetType():
+	terminal_menu = TerminalMenu(menu_entries = ["Automatic", "Manual", "Exit"])
+	entry_index = terminal_menu.show()
+	match entry_index:
+		case 0:
+			automaticSelectTarget()
+		case 1:
+			displaySelectTarget()
+		case 2:
+			return
+
+def automaticSelectTarget():
+	#airoScan(settings.globals["interfaceAP"])
+	aps = getAps()
+	print_array(aps["aps"])
+
+	for i in range(len(aps["aps"])):
+		current = aps["aps"][i]
+		max = current
+		if max[10] > current[10]:
+			max = current
+	settings.globals["targetWifi"] = max[13].lstrip()
+	settings.globals["bssid"] = max[0].lstrip()
+	settings.globals["channel"] = max[3].lstrip()
 
 def displaySelectTarget():
 	#airoScan(settings.globals["interfaceAP"])
