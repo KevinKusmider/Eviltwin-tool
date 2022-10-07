@@ -1,0 +1,8 @@
+
+BSSID, First time seen, Last time seen, channel, Speed, Privacy, Cipher, Authentication, Power, # beacons, # IV, LAN IP, ID-length, ESSID, Key
+2E:1E:C1:B6:61:07, 2022-10-07 11:42:10, 2022-10-07 11:42:29,  6, 130, WPA3 WPA2, CCMP, SAE PSK, -28,      130,        2,   0.  0.  0.  0,   8, iPhone Y, 
+
+Station MAC, First time seen, Last time seen, Power, # packets, BSSID, Probed ESSIDs
+0E:CF:57:B2:52:D9, 2022-10-07 11:42:10, 2022-10-07 11:42:29, -12,      198, 2E:1E:C1:B6:61:07,
+F8:E4:E3:7C:6C:71, 2022-10-07 11:42:23, 2022-10-07 11:42:23,  -1,        1, 2E:1E:C1:B6:61:07,
+

@@ -1,4 +1,4 @@
-interface=wlan1
-ssid=ESGI
+interface=wlan0mon
+ssid=iPhone Y
 hw_mode=g
 channel=3
