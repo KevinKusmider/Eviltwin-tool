@@ -1,4 +1,4 @@
 interface=wlan0mon
-ssid=iPhone Y
+ssid=Redmi 9A
 hw_mode=g
 channel=3
